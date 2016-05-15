@@ -397,3 +397,19 @@ load :-
   write('Loaded the database from the file.'), nl.
 
 
+/**
+ * read_cds_from_file.
+ *
+ * Read CDs from the opened file and add them to the database.
+ */
+read_cds_from_file :-
+  repeat,
+  read(CD),
+  (
+    CD = end_of_file ->
+      !,
+      fail;
+
+    asserta(CD),
+    fail
+  ).

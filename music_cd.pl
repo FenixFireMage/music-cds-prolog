@@ -16,7 +16,7 @@
 
 
 :-
-  dynamic(music_cd/6).
+  dynamic(music_cd/7).
 
 
 /**
@@ -81,7 +81,7 @@ action :-
       fail;
 
     Choice = 'list' ->
-      list_cds(_, _, _, _, _, _),
+      list_cds(_, _, _, _, _, _, _),
       fail;
 
     Choice = 'search' ->
@@ -117,7 +117,7 @@ add_cd :-
     write('ID number: '),
     read(ID_number),
     (
-      not(music_cd(ID_number, _, _, _, _, _)),
+      not(music_cd(ID_number, _, _, _, _, _, _)),
       !;
       write('A CD with that ID already exists!'), nl,
       write('Please provide a different one.'), nl,
@@ -126,6 +126,8 @@ add_cd :-
   ),
   write('Name: '),
   read(Name),
+  write('Genre: '),
+  read(Genre),
   write('Author: '),
   read(Author),
   write('Studio: '),
@@ -147,6 +149,7 @@ add_cd :-
     music_cd(
       ID_number,
       Name,
+      Genre,
       Author,
       Studio,
       Date,
@@ -166,7 +169,7 @@ remove_cd :-
   write('ID number: '),
   read(ID_number),
   retract(
-    music_cd(ID_number, _, _, _, _, _)
+    music_cd(ID_number, _, _, _, _, _, _)
   ),
   write('Removed a CD with ID '),
   write(ID_number),
@@ -182,6 +185,7 @@ remove_cd :-
 list_cds(
   ID_number,
   Name,
+  Genre,
   Author,
   Studio,
   Date,
@@ -193,6 +197,7 @@ list_cds(
     music_cd(
       ID_number,
       Name,
+      Genre,
       Author,
       Studio,
       Date,
@@ -206,6 +211,8 @@ list_cds(
   write(ID_number), nl,
   write('Name: '),
   write(Name), nl,
+  write('Genre: '),
+  write(Genre), nl,
   write('Author: '),
   write(Author), nl,
   write('Studio: '),
@@ -226,6 +233,7 @@ search_cd :-
   write('What do you want to search by?'), nl,
   write('  [id]     ID number'), nl,
   write('  [name]   Name'), nl,
+  write('  [genre]  Genre'), nl,
   write('  [author] Author'), nl,
   write('  [studio] Studio'), nl,
   write('  [date]   Date'), nl,
@@ -241,6 +249,11 @@ search_cd :-
     Choice = 'name' ->
       search_by_name,
       !;
+
+    Choice = 'genre' ->
+      search_by_genre,
+      !;
+
 
     Choice = 'author' ->
       search_by_author,
@@ -274,7 +287,7 @@ search_cd :-
 search_by_id :-
   write('ID number: '),
   read(ID_number),
-  list_cds(ID_number, _, _, _, _, _);
+  list_cds(ID_number, _, _, _, _, _, _);
   true.
 
 
@@ -286,8 +299,21 @@ search_by_id :-
 search_by_name :-
   write('Name: '),
   read(Name),
-  list_cds(_, Name, _, _, _, _);
+  list_cds(_, Name, _, _, _, _, _);
   true.
+
+
+/**
+ * search_by_genre.
+ *
+ * Search for a CD by it's genre.
+ */
+search_by_genre :-
+  write('Genre: '),
+  read(Genre),
+  list_cds(_, _, Genre, _, _, _, _);
+  true.
+
 
 
 /**
@@ -298,7 +324,7 @@ search_by_name :-
 search_by_author :-
   write('Author: '),
   read(Author),
-  list_cds(_, _, Author, _, _, _);
+  list_cds(_, _, _, Author, _, _, _);
   true.
 
 
@@ -310,7 +336,7 @@ search_by_author :-
 search_by_studio :-
   write('Studio: '),
   read(Studio),
-  list_cds(_, _, _, Studio, _, _);
+  list_cds(_, _, _, _, Studio, _, _);
   true.
 
 
@@ -322,7 +348,7 @@ search_by_studio :-
 search_by_date :-
   write('Date: '),
   read(Date),
-  list_cds(_, _, _, _, Date, _);
+  list_cds(_, _, _, _, _, Date, _);
   true.
 
 
@@ -334,7 +360,7 @@ search_by_date :-
 search_by_length :-
   write('Length: '),
   read(Length),
-  list_cds(_, _, _, _, _, Length);
+  list_cds(_, _, _, _, _, _, Length);
   true.
 
 /**
@@ -361,6 +387,7 @@ list_cds_to_file :-
     music_cd(
       ID_number,
       Name,
+      Genre,
       Author,
       Studio,
       Date,
@@ -373,6 +400,7 @@ list_cds_to_file :-
     music_cd(
       ID_number,
       Name,
+      Genre,
       Author,
       Studio,
       Date,
