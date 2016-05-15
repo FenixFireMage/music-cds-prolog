@@ -15,6 +15,10 @@
  */
 
 
+:-
+  dynamic(music_cd/6).
+
+
 /**
  * application.
  *
@@ -52,6 +56,7 @@ menu :-
   write('MAIN MENU'), nl,
   write('  [add]    Add a new CD.'), nl,
   write('  [remove] Remove a CD.'), nl,
+  write('  [list]   List all CDs in the database.'), nl,
   write('  [exit]   Exit the application.'), nl.
 
 
@@ -70,6 +75,10 @@ action :-
 
     Choice = 'remove' ->
       remove_cd,
+      fail;
+
+    Choice = 'list' ->
+      list_cds,
       fail;
 
     Choice = 'exit' ->
@@ -138,3 +147,39 @@ remove_cd :-
   write('Removed a CD with ID '),
   write(ID_number),
   write(' from the database.'), nl.
+
+
+/**
+ * list_cds.
+ *
+ * List all CDs in the database.
+ */
+list_cds :-
+  write('CDs in the database:'),
+  repeat,
+  (
+    music_cd(
+      ID_number,
+      Name,
+      Author,
+      Studio,
+      Date,
+      Length
+    );
+    !,
+    fail
+  ),
+  nl,
+  write('ID_number: '),
+  write(ID_number), nl,
+  write('Name: '),
+  write(Name), nl,
+  write('Author: '),
+  write(Author), nl,
+  write('Studio: '),
+  write(Studio), nl,
+  write('Date: '),
+  write(Date), nl,
+  write('Length: '),
+  write(Length), nl,
+  fail.
