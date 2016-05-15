@@ -57,6 +57,7 @@ menu :-
   write('  [add]    Add a new CD.'), nl,
   write('  [remove] Remove a CD.'), nl,
   write('  [list]   List all CDs in the database.'), nl,
+  write('  [search] Search for a CD.'), nl,
   write('  [exit]   Exit the application.'), nl.
 
 
@@ -78,7 +79,11 @@ action :-
       fail;
 
     Choice = 'list' ->
-      list_cds,
+      list_cds(_, _, _, _, _, _),
+      fail;
+
+    Choice = 'search' ->
+      search_cd,
       fail;
 
     Choice = 'exit' ->
@@ -117,8 +122,17 @@ add_cd :-
   read(Studio),
   write('Date: '),
   read(Date),
-  write('Length: '),
-  read(Length),
+  (
+    repeat,
+    write('Length in minutes: '),
+    read(Length),
+    (
+      number(Length),
+      !;
+      write('Please provide a number!'), nl,
+      fail
+    )
+  ),
   asserta(
     music_cd(
       ID_number,
@@ -152,10 +166,18 @@ remove_cd :-
 /**
  * list_cds.
  *
- * List all CDs in the database.
+ * List CDs in the database.
+ * This can show all CDs or search by an attribute.
  */
-list_cds :-
-  write('CDs in the database:'),
+list_cds(
+  ID_number,
+  Name,
+  Author,
+  Studio,
+  Date,
+  Length
+) :-
+  write('CDs in the database:'), nl,
   repeat,
   (
     music_cd(
@@ -183,3 +205,144 @@ list_cds :-
   write('Length: '),
   write(Length), nl,
   fail.
+
+
+/**
+ * search_cd.
+ *
+ * Search for a CD by one of it's attributes.
+ */
+search_cd :-
+  write('What do you want to search by?'), nl,
+  write('  [id]     ID number'), nl,
+  write('  [name]   Name'), nl,
+  write('  [author] Author'), nl,
+  write('  [studio] Studio'), nl,
+  write('  [date]   Date'), nl,
+  write('  [length] Length'), nl,
+  repeat,
+  write('Search by: '),
+  read(Choice),
+  (
+    Choice = 'id' ->
+      search_by_id,
+      !;
+
+    Choice = 'name' ->
+      search_by_name,
+      !;
+
+    Choice = 'author' ->
+      search_by_author,
+      !;
+
+    Choice = 'studio' ->
+      search_by_studio,
+      !;
+
+    Choice = 'date' ->
+      search_by_date,
+      !;
+
+    Choice = 'length' ->
+      search_by_length,
+      !;
+
+
+    write('Unknown attribute '),
+    write(Choice),
+    write('. Try again.'), nl,
+    fail
+  ).
+
+
+/**
+ * search_by_id.
+ *
+ * Search for a CD by it's id number.
+ */
+search_by_id :-
+  write('ID number: '),
+  read(ID_number),
+  list_cds(ID_number, _, _, _, _, _);
+  true.
+
+
+/**
+ * search_by_name.
+ *
+ * Search for a CD by it's name.
+ */
+search_by_name :-
+  write('Name: '),
+  read(Name),
+  list_cds(_, Name, _, _, _, _);
+  true.
+
+
+/**
+ * search_by_author.
+ *
+ * Search for a CD by it's author.
+ */
+search_by_author :-
+  write('Author: '),
+  read(Author),
+  list_cds(_, _, Author, _, _, _);
+  true.
+
+
+/**
+ * search_by_studio.
+ *
+ * Search for a CD by it's studio.
+ */
+search_by_studio :-
+  write('Studio: '),
+  read(Studio),
+  list_cds(_, _, _, Studio, _, _);
+  true.
+
+
+/**
+ * search_by_date.
+ *
+ * Search for a CD by it's date.
+ */
+search_by_date :-
+  write('Date: '),
+  read(Date),
+  list_cds(_, _, _, _, Date, _);
+  true.
+
+
+/**
+ * search_by_length.
+ *
+ * Search for a CD by it's length.
+ */
+search_by_length :-
+  write('Length: '),
+  read(Length),
+  list_cds(_, _, _, _, _, Length);
+  true.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
