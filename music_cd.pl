@@ -58,7 +58,6 @@ menu :-
   write('  [remove] Remove a CD.'), nl,
   write('  [list]   List all CDs in the database.'), nl,
   write('  [search] Search for a CD.'), nl,
-  write('  [sort]   List CDs sorted by an attribute.'), nl,
   write('  [save]   Save the database to a file.'), nl,
   write('  [load]   Load the database from a file.'), nl,
   write('  [exit]   Exit the application.'), nl.
@@ -87,10 +86,6 @@ action :-
 
     Choice = 'search' ->
       search_cd,
-      fail;
-
-    Choice = 'sort' ->
-      sort,
       fail;
 
     Choice = 'save' ->
@@ -366,88 +361,6 @@ search_by_length :-
   read(Length),
   list_cds(_, _, _, _, _, _, Length);
   true.
-
-
-/**
- * sort.
- *
- * Show the database sorted by an attribute.
- */
-sort :-
-  findall(
-      [
-        ID_number,
-        Name,
-        Genre,
-        Author,
-        Studio,
-        Date,
-        Length
-      ],
-      music_cd(
-	ID_number,
-	Name,
-	Genre,
-	Author,
-        Studio,
-	Date,
-	Length
-      ),
-      CDList
-  ),
-  write('What do you want to sort by?'), nl,
-  write('  [name]   Name'), nl,
-  write('  [date]   Date'), nl,
-  write('  [length] Length'), nl,
-  repeat,
-  write('Sort by: '),
-  read(Choice),
-  (
-    Choice = 'name' ->
-      sort_by_name(CDList),
-      !;
-
-    Choice = 'date' ->
-      sort_by_date(CDList),
-      !;
-
-    Choice = 'length' ->
-      sort_by_length(CDList),
-      !;
-
-
-    write('Unknown attribute '),
-    write(Choice),
-    write('. Try again.'), nl,
-    fail
-  ).
-
-
-/**
- * print_sorted(+CDList).
- *
- * Print the CD list.
- */
-print_sorted([]).
-print_sorted([
-  [ID_number, Name, Genre, Author, Studio, Date, Length]|Tail
-]) :-
-  nl,
-  write('ID_number: '),
-  write(ID_number), nl,
-  write('Name: '),
-  write(Name), nl,
-  write('Genre: '),
-  write(Genre), nl,
-  write('Author: '),
-  write(Author), nl,
-  write('Studio: '),
-  write(Studio), nl,
-  write('Date: '),
-  write(Date), nl,
-  write('Length: '),
-  write(Length), nl,
-  print_sorted(Tail).
 
 
 /**

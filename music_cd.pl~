@@ -259,7 +259,6 @@ search_cd :-
       search_by_genre,
       !;
 
-
     Choice = 'author' ->
       search_by_author,
       !;
@@ -397,36 +396,15 @@ sort :-
       CDList
   ),
   write('What do you want to sort by?'), nl,
-  write('  [id]     ID number'), nl,
   write('  [name]   Name'), nl,
-  write('  [genre]  Genre'), nl,
-  write('  [author] Author'), nl,
-  write('  [studio] Studio'), nl,
   write('  [date]   Date'), nl,
   write('  [length] Length'), nl,
   repeat,
   write('Sort by: '),
   read(Choice),
   (
-    Choice = 'id' ->
-      sort_by_id(CDList),
-      !;
-
     Choice = 'name' ->
       sort_by_name(CDList),
-      !;
-
-    Choice = 'genre' ->
-      sort_by_genre(CDList),
-      !;
-
-
-    Choice = 'author' ->
-      sort_by_author(CDList),
-      !;
-
-    Choice = 'studio' ->
-      sort_by_studio(CDList),
       !;
 
     Choice = 'date' ->
@@ -470,16 +448,6 @@ print_sorted([
   write('Length: '),
   write(Length), nl,
   print_sorted(Tail).
-
-
-/**
- * sort_by_id(+CDList).
- *
- * Sort the CD list by the CD's id.
- */
-sort_by_id(CDList) :-
-  write('CDs sorted by ID:'), nl,
-  print_sorted(CDList).
 
 
 /**
