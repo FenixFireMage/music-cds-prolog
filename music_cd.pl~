@@ -21,26 +21,7 @@
  * Runs the application.
  *
  * @see menu
- * @see action
  */
 application :-
   repeat,
-  menu,
-  action.
-
-
-/**
- * menu.
- *
- * Shows the main menu.
- */
-menu :-
-  print('MAIN MENU'), nl.
-
-
-/**
- * action.
- *
- * Read user input and take an action.
- */
-action.
+  menu.
