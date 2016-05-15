@@ -26,8 +26,10 @@
 application :-
   header,
   repeat,
-  menu,
-  action.
+  (
+    menu,
+    action
+  ).
 
 
 /**
@@ -37,7 +39,7 @@ application :-
  */
 header :-
   write('MUSIC CD DATABASE'), nl,
-  print('by chuckeles'), nl, nl.
+  write('by chuckeles'), nl, nl.
 
 
 /**
@@ -46,7 +48,8 @@ header :-
  * Shows the main menu.
  */
 menu :-
-  print('MAIN MENU'), nl.
+  write('MAIN MENU'), nl,
+  write('  [exit] Exit the application.'), nl.
 
 
 /**
@@ -54,4 +57,13 @@ menu :-
  *
  * Read user input and take an action.
  */
-action.
+action :-
+  write('Your choice: '),
+  read(Choice),
+  (
+    Choice = 'exit' ->
+      write('Exiting the application!'), nl;
+
+    write('What does that mean? I dont understand!'), nl,
+    fail
+  ).
