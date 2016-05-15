@@ -24,9 +24,20 @@
  * @see action
  */
 application :-
+  header,
   repeat,
   menu,
   action.
+
+
+/**
+ * header.
+ *
+ * Show the initial application header.
+ */
+header :-
+  write('MUSIC CD DATABASE'), nl,
+  write('by chuckeles'), nl, nl.
 
 
 /**
@@ -35,7 +46,7 @@ application :-
  * Shows the main menu.
  */
 menu :-
-  print('MAIN MENU'), nl.
+  write('MAIN MENU'), nl.
 
 
 /**

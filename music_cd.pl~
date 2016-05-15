@@ -21,7 +21,37 @@
  * Runs the application.
  *
  * @see menu
+ * @see action
  */
 application :-
+  header,
   repeat,
-  menu.
+  menu,
+  action.
+
+
+/**
+ * header.
+ *
+ * Show the initial application header.
+ */
+header :-
+  write('MUSIC CD DATABASE'), nl,
+  print('by chuckeles'), nl, nl.
+
+
+/**
+ * menu.
+ *
+ * Shows the main menu.
+ */
+menu :-
+  print('MAIN MENU'), nl.
+
+
+/**
+ * action.
+ *
+ * Read user input and take an action.
+ */
+action.
