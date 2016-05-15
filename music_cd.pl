@@ -59,6 +59,7 @@ menu :-
   write('  [list]   List all CDs in the database.'), nl,
   write('  [search] Search for a CD.'), nl,
   write('  [save]   Save the database to a file.'), nl,
+  write('  [load]   Load the database from a file.'), nl,
   write('  [exit]   Exit the application.'), nl.
 
 
@@ -89,6 +90,10 @@ action :-
 
     Choice = 'save' ->
       save,
+      fail;
+
+    Choice = 'load' ->
+      load,
       fail;
 
     Choice = 'exit' ->
@@ -376,3 +381,35 @@ list_cds_to_file :-
   ),
   write('.'), nl,
   fail.
+
+
+/**
+ * load.
+ *
+ * Load a database from a file.
+ */
+load :-
+  write('File name: '),
+  read(File),
+  see(File),
+  read_cds_from_file;
+  seen,
+  write('Loaded the database from the file.'), nl.
+
+
+/**
+ * read_cds_from_file.
+ *
+ * Read CDs from the opened file and add them to the database.
+ */
+read_cds_from_file :-
+  repeat,
+  read(CD),
+  (
+    CD = end_of_file ->
+      !,
+      fail;
+
+    asserta(CD),
+    fail
+  ).
