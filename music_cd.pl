@@ -50,8 +50,9 @@ header :-
 menu :-
   nl,
   write('MAIN MENU'), nl,
-  write('  [add]  Add a new CD.'), nl,
-  write('  [exit] Exit the application.'), nl.
+  write('  [add]    Add a new CD.'), nl,
+  write('  [remove] Remove a CD.'), nl,
+  write('  [exit]   Exit the application.'), nl.
 
 
 /**
@@ -67,8 +68,13 @@ action :-
       add_cd,
       fail;
 
+    Choice = 'remove' ->
+      remove_cd,
+      fail;
+
     Choice = 'exit' ->
-      write('Exiting the application!'), nl;
+      write('Exiting the application!'), nl,
+      !;
 
     write('What does that mean? I don\'t understand!'), nl,
     fail
@@ -82,8 +88,18 @@ action :-
  */
 add_cd :-
   write('Please provide information about this CD:'), nl,
-  write('ID number: '),
-  read(ID_number),
+  (
+    repeat,
+    write('ID number: '),
+    read(ID_number),
+    (
+      not(music_cd(ID_number, _, _, _, _, _)),
+      !;
+      write('A CD with that ID already exists!'), nl,
+      write('Please provide a different one.'), nl,
+      fail
+    )
+  ),
   write('Name: '),
   read(Name),
   write('Author: '),
@@ -105,3 +121,20 @@ add_cd :-
     )
   ),
   write('Added the new CD to the database.'), nl.
+
+
+/**
+ * remove_cd.
+ *
+ * Remove a CD from the database.
+ */
+remove_cd :-
+  write('What is the ID number of the CD you want to remove?'), nl,
+  write('ID number: '),
+  read(ID_number),
+  retract(
+    music_cd(ID_number, _, _, _, _, _)
+  ),
+  write('Removed a CD with ID '),
+  write(ID_number),
+  write(' from the database.'), nl.
