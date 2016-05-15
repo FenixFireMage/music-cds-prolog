@@ -39,7 +39,7 @@ application :-
  */
 header :-
   write('MUSIC CD DATABASE'), nl,
-  write('by chuckeles'), nl, nl.
+  write('by chuckeles'), nl.
 
 
 /**
@@ -48,7 +48,9 @@ header :-
  * Shows the main menu.
  */
 menu :-
+  nl,
   write('MAIN MENU'), nl,
+  write('  [add]  Add a new CD.'), nl,
   write('  [exit] Exit the application.'), nl.
 
 
@@ -61,9 +63,45 @@ action :-
   write('Your choice: '),
   read(Choice),
   (
+    Choice = 'add' ->
+      add_cd,
+      fail;
+
     Choice = 'exit' ->
       write('Exiting the application!'), nl;
 
     write('What does that mean? I don\'t understand!'), nl,
     fail
   ).
+
+
+/**
+ * add_cd.
+ *
+ * Add a new music CD to the database.
+ */
+add_cd :-
+  write('Please provide information about this CD:'), nl,
+  write('ID number: '),
+  read(ID_number),
+  write('Name: '),
+  read(Name),
+  write('Author: '),
+  read(Author),
+  write('Studio: '),
+  read(Studio),
+  write('Date: '),
+  read(Date),
+  write('Length: '),
+  read(Length),
+  asserta(
+    music_cd(
+      ID_number,
+      Name,
+      Author,
+      Studio,
+      Date,
+      Length
+    )
+  ),
+  write('Added the new CD to the database.'), nl.
