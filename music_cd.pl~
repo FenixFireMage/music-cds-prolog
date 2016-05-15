@@ -58,6 +58,7 @@ menu :-
   write('  [remove] Remove a CD.'), nl,
   write('  [list]   List all CDs in the database.'), nl,
   write('  [search] Search for a CD.'), nl,
+  write('  [save]   Save the database to a file.'), nl,
   write('  [exit]   Exit the application.'), nl.
 
 
@@ -84,6 +85,10 @@ action :-
 
     Choice = 'search' ->
       search_cd,
+      fail;
+
+    Choice = 'save' ->
+      save,
       fail;
 
     Choice = 'exit' ->
@@ -122,8 +127,17 @@ add_cd :-
   read(Studio),
   write('Date: '),
   read(Date),
-  write('Length: '),
-  read(Length),
+  (
+    repeat,
+    write('Length in minutes: '),
+    read(Length),
+    (
+      number(Length),
+      !;
+      write('Please provide a number!'), nl,
+      fail
+    )
+  ),
   asserta(
     music_cd(
       ID_number,
@@ -318,22 +332,46 @@ search_by_length :-
   list_cds(_, _, _, _, _, Length);
   true.
 
+/**
+ * save.
+ *
+ * Save the database to a file.
+ */
+save :-
+  write('File name: '),
+  read(File),
+  tell(File),
+  list_cds_to_file;
+  told,
+  write('Saved the database to the file.'), nl.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * list_cds_to_file.
+ *
+ * Writes all CDs to a file that is open.
+ */
+list_cds_to_file :-
+  repeat,
+  (
+    music_cd(
+      ID_number,
+      Name,
+      Author,
+      Studio,
+      Date,
+      Length
+    );
+    !,
+    fail
+  ),
+  write(
+    music_cd(
+      ID_number,
+      Name,
+      Author,
+      Studio,
+      Date,
+      Length
+    )
+  ),
+  fail.
