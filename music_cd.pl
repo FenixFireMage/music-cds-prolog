@@ -142,8 +142,20 @@ add_cd :-
   read(Author),
   write('Studio: '),
   read(Studio),
-  write('Date: '),
-  read(Date),
+  (
+    repeat,
+    write('Date [MM-YY]: '),
+    read(Date),
+    (
+      Date = Month-Year,
+      Month >= 1,
+      Month =< 12,
+      Year < 100,
+      !;
+      write('Wrong format!'), nl,
+      fail
+    )
+  ),
   (
     repeat,
     write('Length in minutes: '),
@@ -707,7 +719,14 @@ insert_by_date([
     Studio,
     Date,
     Length] | OutTail]) :-
-  EDate @> Date,
+  EDate = EM-EY,
+  Date = M-Y,
+  % EDate > Date
+  (
+    EY > Y;
+    EY =:= Y,
+    EM > M
+  ),
   insert_by_date([
     EID_number,
     EName,
@@ -745,7 +764,14 @@ insert_by_date([
     Studio,
     Date,
     Length] | Tail]) :-
-  EDate @=< Date.
+  EDate = EM-EY,
+  Date = M-Y,
+  % EDate @=< Date
+  (
+    EY < Y;
+    EY =:= Y,
+    EM =< M
+  ).
 
 
 /**
