@@ -237,7 +237,8 @@ list_cds(
 genres :-
   write('Music CDs by genre:'), nl,
   findall(Genre, music_cd(_, _, Genre, _, _, _, _), GenreList),
-  print_genres(GenreList).
+  unique(GenreList, UniqueList),
+  print_genres(UniqueList).
 
 
 /**
@@ -496,3 +497,28 @@ read_cds_from_file :-
     assertz(CD),
     fail
   ).
+
+
+/**
+ * unique(+List, -UniqueList).
+ *
+ * Makes every element of the List appear in the UniqueList
+ * only once.
+ */
+unique([], []).
+unique([LHead | LTail], [LHead | UTail]) :-
+  remove_all(LHead, LTail, LWithoutHead),
+  unique(LWithoutHead, UTail).
+
+
+/**
+ * remove_all(?Element, +List, -ListWithoutElement).
+ *
+ * Remove all elements Element from List.
+ */
+remove_all(_, [], []).
+remove_all(Element, [Element | LTail], LWETail) :-
+  remove_all(Element, LTail, LWETail).
+remove_all(Element, [LHead | LTail], [LHead | LWETail]) :-
+  Element \= LHead,
+  remove_all(Element, LTail, LWETail).
