@@ -57,6 +57,7 @@ menu :-
   write('  [add]    Add a new CD.'), nl,
   write('  [remove] Remove a CD.'), nl,
   write('  [list]   List all CDs in the database.'), nl,
+  write('  [genres] List CDs grouped by genres.'), nl,
   write('  [search] Search for a CD.'), nl,
   write('  [save]   Save the database to a file.'), nl,
   write('  [load]   Load the database from a file.'), nl,
@@ -82,6 +83,10 @@ action :-
 
     Choice = 'list' ->
       list_cds(_, _, _, _, _, _, _),
+      fail;
+
+    Choice = 'genres' ->
+      genres,
       fail;
 
     Choice = 'search' ->
@@ -221,6 +226,56 @@ list_cds(
   write(Date), nl,
   write('Length: '),
   write(Length), nl,
+  fail.
+
+
+/**
+ * genres.
+ *
+ * List CD names grouped by genres.
+ */
+genres :-
+  write('Music CDs by genre:'), nl,
+  findall(Genre, music_cd(_, _, Genre, _, _, _, _), GenreList),
+  print_genres(GenreList).
+
+
+/**
+ * print_genres(+Genres).
+ *
+ * Print CD names grouped by genres in a list.
+ */
+print_genres([]).
+print_genres([Genre | Tail]) :-
+  print_genre(Genre);
+  print_genres(Tail).
+
+
+/**
+ * print_genre(+Genre).
+ *
+ * Print all CDs of a genre.
+ */
+print_genre(Genre) :-
+  nl,
+  write(Genre),
+  write(:), nl,
+  repeat,
+  (
+    music_cd(
+      _,
+      Name,
+      Genre,
+      _,
+      _,
+      _,
+      _
+    );
+    !,
+    fail
+  ),
+  write('  '),
+  write(Name), nl,
   fail.
 
 
