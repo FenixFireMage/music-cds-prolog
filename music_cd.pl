@@ -59,6 +59,7 @@ menu :-
   write('  [list]   List all CDs in the database.'), nl,
   write('  [genres] List CDs grouped by genres.'), nl,
   write('  [search] Search for a CD.'), nl,
+  write('  [sort]   Sort CDs by an attribute.'), nl,
   write('  [save]   Save the database to a file.'), nl,
   write('  [load]   Load the database from a file.'), nl,
   write('  [exit]   Exit the application.'), nl.
@@ -91,6 +92,10 @@ action :-
 
     Choice = 'search' ->
       search_cd,
+      fail;
+
+    Choice = 'sort' ->
+      sort_cds,
       fail;
 
     Choice = 'save' ->
@@ -417,6 +422,188 @@ search_by_length :-
   read(Length),
   list_cds(_, _, _, _, _, _, Length);
   true.
+
+
+/**
+ * sort_cds.
+ *
+ * Show CDs sorted by an attribute.
+ */
+sort_cds :-
+  write('What do you want to sort by?'), nl,
+  write('  [name]   Name'), nl,
+  write('  [author] Author'), nl,
+  write('  [date]   Date'), nl,
+  write('  [length] Length'), nl,
+  findall([
+      ID_number,
+      Name,
+      Genre,
+      Author,
+      Studio,
+      Date,
+      Length],
+    music_cd(
+      ID_number,
+      Name,
+      Genre,
+      Author,
+      Studio,
+      Date,
+      Length
+    ), CDList),
+  repeat,
+  write('Search by: '),
+  read(Choice),
+  (
+    Choice = 'name' ->
+      sort_by_name(CDList),
+      !;
+
+    Choice = 'author' ->
+      sort_by_author(CDList),
+      !;
+
+    Choice = 'date' ->
+      sort_by_date(CDList),
+      !;
+
+    Choice = 'length' ->
+      sort_by_length(CDList),
+      !;
+
+
+    write('Unknown attribute '),
+    write(Choice),
+    write('. Try again.'), nl,
+    fail
+  ).
+
+
+/**
+ * print_cd_list(CDList).
+ *
+ * Print a list of CDs.
+ */
+print_cd_list([]).
+print_cd_list([[
+    ID_number,
+    Name,
+    Genre,
+    Author,
+    Studio,
+    Date,
+    Length] | Tail]) :-
+  nl,
+  write('ID_number: '),
+  write(ID_number), nl,
+  write('Name: '),
+  write(Name), nl,
+  write('Genre: '),
+  write(Genre), nl,
+  write('Author: '),
+  write(Author), nl,
+  write('Studio: '),
+  write(Studio), nl,
+  write('Date: '),
+  write(Date), nl,
+  write('Length: '),
+  write(Length), nl,
+  print_cd_list(Tail).
+
+
+/**
+ * sort_by_name(CDList).
+ *
+ * Show CDs sorted by name.
+ */
+sort_by_name(CDList) :-
+  nl,
+  write('CDs sorted by name:'), nl,
+  sort_list_by_name(CDList, SortedList),
+  print_cd_list(SortedList).
+
+
+/**
+ * sort_list_by_name(+Unsorted, -Sorted).
+ *
+ * Sort a list of CDs by name.
+ */
+sort_list_by_name(Unsorted, Sorted) :-
+  sort_list_by_name_acc(Unsorted, [], Sorted).
+sort_list_by_name_acc([], Acc, Acc).
+sort_list_by_name_acc([Head | Tail], Acc, Sorted) :-
+  insert_by_name(Head, Acc, NewAcc),
+  sort_list_by_name_acc(Tail, NewAcc, Sorted).
+
+
+/**
+ * insert_by_name(+Element, +List, -ListWithElement).
+ *
+ * Insert sort the Element into the List.
+ */
+insert_by_name(X, [], [X]).
+insert_by_name([
+    EID_number,
+    EName,
+    EGenre,
+    EAuthor,
+    EStudio,
+    EDate,
+    ELength], [[
+    ID_number,
+    Name,
+    Genre,
+    Author,
+    Studio,
+    Date,
+    Length] | InTail], [[
+    ID_number,
+    Name,
+    Genre,
+    Author,
+    Studio,
+    Date,
+    Length] | OutTail]) :-
+  EName @> Name,
+  insert_by_name([
+    EID_number,
+    EName,
+    EGenre,
+    EAuthor,
+    EStudio,
+    EDate,
+    ELength], InTail, OutTail).
+insert_by_name([
+    EID_number,
+    EName,
+    EGenre,
+    EAuthor,
+    EStudio,
+    EDate,
+    ELength], [[
+    ID_number,
+    Name,
+    Genre,
+    Author,
+    Studio,
+    Date,
+    Length] | Tail], [[
+    EID_number,
+    EName,
+    EGenre,
+    EAuthor,
+    EStudio,
+    EDate,
+    ELength], [
+    ID_number,
+    Name,
+    Genre,
+    Author,
+    Studio,
+    Date,
+    Length] | Tail]) :-
+  EName @=< Name.
 
 
 /**
