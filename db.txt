@@ -1,0 +1,10 @@
+music_cd(1,blue_lagoon,pop,martin,the_three,7-2,100).
+music_cd(2,glass_door,pop,martin,the_three,8-4,200).
+music_cd(3,my_hair,rock,martin,the_three,12-2,120).
+music_cd(4,abbame,classic,patrik,the_three,7-15,60).
+music_cd(5,night,classic,patrik,the_three,8-16,60).
+music_cd(6,ma_bluez,blues,patrik,the_three,8-12,76).
+music_cd(7,night_o,rock,martin,the_three,1-15,20).
+music_cd(8,headphones_are_cool,pop,patrik,the_three,2-4,58).
+music_cd(9,music_in_my_veins,blues,dan,dan_studio,6-5,83).
+music_cd(10,old_days,blues,dan,dan_studio,12-5,68).
