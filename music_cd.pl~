@@ -457,19 +457,19 @@ sort_cds :-
   read(Choice),
   (
     Choice = 'name' ->
-      sort_by_name(CDList),
+      sort_by(name, CDList),
       !;
 
     Choice = 'author' ->
-      sort_by_author(CDList),
+      sort_by(author, CDList),
       !;
 
     Choice = 'date' ->
-      sort_by_date(CDList),
+      sort_by(date, CDList),
       !;
 
     Choice = 'length' ->
-      sort_by_length(CDList),
+      sort_by(length, CDList),
       !;
 
 
@@ -513,14 +513,16 @@ print_cd_list([[
 
 
 /**
- * sort_by_name(CDList).
+ * sort_by_name(Attribute CDList).
  *
- * Show CDs sorted by name.
+ * Show CDs sorted by an attribute.
  */
-sort_by_name(CDList) :-
+sort_by(Attribute, CDList) :-
   nl,
-  write('CDs sorted by name:'), nl,
-  sort_list_by_name(CDList, SortedList),
+  write('CDs sorted by '),
+  write(Attribute),
+  write(':'), nl,
+  sort_list_by(Attribute, CDList, SortedList),
   print_cd_list(SortedList).
 
 
@@ -529,12 +531,14 @@ sort_by_name(CDList) :-
  *
  * Sort a list of CDs by name.
  */
-sort_list_by_name(Unsorted, Sorted) :-
-  sort_list_by_name_acc(Unsorted, [], Sorted).
-sort_list_by_name_acc([], Acc, Acc).
-sort_list_by_name_acc([Head | Tail], Acc, Sorted) :-
-  insert_by_name(Head, Acc, NewAcc),
-  sort_list_by_name_acc(Tail, NewAcc, Sorted).
+sort_list_by(Attribute, Unsorted, Sorted) :-
+  sort_list_by_acc(Attribute, Unsorted, [], Sorted).
+sort_list_by_acc(_, [], Acc, Acc).
+sort_list_by_acc(Attribute, [Head | Tail], Acc, Sorted) :-
+  atom_concat(insert_by_, Attribute, InsertName),
+  Insert =.. [InsertName, Head, Acc, NewAcc],
+  Insert,
+  sort_list_by_acc(Attribute, Tail, NewAcc, Sorted).
 
 
 /**
@@ -603,8 +607,39 @@ insert_by_name([
     Studio,
     Date,
     Length] | Tail]) :-
-  EName @< Name,
-  insert_by_name([
+  EName @=< Name.
+
+
+/**
+ * insert_by_author(+Element, +List, -ListWithElement).
+ *
+ * Insert sort the Element into the List.
+ */
+insert_by_author(X, [], [X]).
+insert_by_author([
+    EID_number,
+    EName,
+    EGenre,
+    EAuthor,
+    EStudio,
+    EDate,
+    ELength], [[
+    ID_number,
+    Name,
+    Genre,
+    Author,
+    Studio,
+    Date,
+    Length] | InTail], [[
+    ID_number,
+    Name,
+    Genre,
+    Author,
+    Studio,
+    Date,
+    Length] | OutTail]) :-
+  EAuthor @> Author,
+  insert_by_author([
     EID_number,
     EName,
     EGenre,
@@ -612,6 +647,174 @@ insert_by_name([
     EStudio,
     EDate,
     ELength], InTail, OutTail).
+insert_by_author([
+    EID_number,
+    EName,
+    EGenre,
+    EAuthor,
+    EStudio,
+    EDate,
+    ELength], [[
+    ID_number,
+    Name,
+    Genre,
+    Author,
+    Studio,
+    Date,
+    Length] | Tail], [[
+    EID_number,
+    EName,
+    EGenre,
+    EAuthor,
+    EStudio,
+    EDate,
+    ELength], [
+    ID_number,
+    Name,
+    Genre,
+    Author,
+    Studio,
+    Date,
+    Length] | Tail]) :-
+  EAuthor @=< Author.
+
+
+/**
+ * insert_by_date(+Element, +List, -ListWithElement).
+ *
+ * Insert sort the Element into the List.
+ */
+insert_by_date(X, [], [X]).
+insert_by_date([
+    EID_number,
+    EName,
+    EGenre,
+    EAuthor,
+    EStudio,
+    EDate,
+    ELength], [[
+    ID_number,
+    Name,
+    Genre,
+    Author,
+    Studio,
+    Date,
+    Length] | InTail], [[
+    ID_number,
+    Name,
+    Genre,
+    Author,
+    Studio,
+    Date,
+    Length] | OutTail]) :-
+  EDate @> Date,
+  insert_by_date([
+    EID_number,
+    EName,
+    EGenre,
+    EAuthor,
+    EStudio,
+    EDate,
+    ELength], InTail, OutTail).
+insert_by_date([
+    EID_number,
+    EName,
+    EGenre,
+    EAuthor,
+    EStudio,
+    EDate,
+    ELength], [[
+    ID_number,
+    Name,
+    Genre,
+    Author,
+    Studio,
+    Date,
+    Length] | Tail], [[
+    EID_number,
+    EName,
+    EGenre,
+    EAuthor,
+    EStudio,
+    EDate,
+    ELength], [
+    ID_number,
+    Name,
+    Genre,
+    Author,
+    Studio,
+    Date,
+    Length] | Tail]) :-
+  EDate @=< Date.
+
+
+/**
+ * insert_by_length(+Element, +List, -ListWithElement).
+ *
+ * Insert sort the Element into the List.
+ */
+insert_by_length(X, [], [X]).
+insert_by_length([
+    EID_number,
+    EName,
+    EGenre,
+    EAuthor,
+    EStudio,
+    EDate,
+    ELength], [[
+    ID_number,
+    Name,
+    Genre,
+    Author,
+    Studio,
+    Date,
+    Length] | InTail], [[
+    ID_number,
+    Name,
+    Genre,
+    Author,
+    Studio,
+    Date,
+    Length] | OutTail]) :-
+  ELength > Length,
+  insert_by_length([
+    EID_number,
+    EName,
+    EGenre,
+    EAuthor,
+    EStudio,
+    EDate,
+    ELength], InTail, OutTail).
+insert_by_length([
+    EID_number,
+    EName,
+    EGenre,
+    EAuthor,
+    EStudio,
+    EDate,
+    ELength], [[
+    ID_number,
+    Name,
+    Genre,
+    Author,
+    Studio,
+    Date,
+    Length] | Tail], [[
+    EID_number,
+    EName,
+    EGenre,
+    EAuthor,
+    EStudio,
+    EDate,
+    ELength], [
+    ID_number,
+    Name,
+    Genre,
+    Author,
+    Studio,
+    Date,
+    Length] | Tail]) :-
+  ELength =< Length.
 
 
 /**
